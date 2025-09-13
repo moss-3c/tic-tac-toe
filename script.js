@@ -59,19 +59,16 @@ function Gameboard() {
     }
 }
 
-function GameController(
-    p1Name = "Player One",
-    p2Name = "Player Two"
-) {
+function GameController() {
     const board = Gameboard();
 
     const players = [
         {
-            name: p1Name,
+            name: "Player One",
             token: 'X',
         },
         {
-            name: p2Name,
+            name: "Player Two",
             token: 'O',
         }
     ];
@@ -88,10 +85,6 @@ function GameController(
     const getActivePlayer = () => activePlayer;
 
     const getMatchResult = () => matchResult;
-
-    const printNewRound = () => {
-        console.log(`${getActivePlayer().name}'s turn:`);
-    }
 
     const playRound = (column, row) => {
 
@@ -121,7 +114,6 @@ function GameController(
          }
        
     }
-
     //returns winner if there is one, returns tie if tie, else returns null
     const updateResult = () => {
         if (hasWon(players[0].token)) {
@@ -137,32 +129,31 @@ function GameController(
             matchResult = 'in-progress';
         }
 
-    }
-    const checkTie = () => {
-        const values = extractValues();
-        return !values.includes('');
-    }
+        const checkTie = () => {
+            const values = extractValues();
+            return !values.includes('');
+        }
+        const hasWon = (playerToken) => {
+            const values = extractValues();
+            const magicSquare = [2, 7, 6, 9, 5, 1, 4, 3, 8];
+    
+            //comparing all combos of 3 cells, see if their sum in the magic square equals 15
+            //idea from https://fowlie.github.io/2018/08/24/winning-algorithm-for-tic-tac-toe-using-a-3x3-magic-square/
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    for (let k = 0; k < 9; k++) {
+                        if (i != j && i != k && j != k) {//don't compare cell with itself
+                            if (values[i] === playerToken && 
+                                values[j] === playerToken && 
+                                values[k] === playerToken){
+                                if ((magicSquare[i] + magicSquare[j] + magicSquare[k]) == 15){
+                                    return true;
+                                }
+                                return false;
+                            }}}}} 
+        }
 
-    const hasWon = (playerToken) => {
-        const values = extractValues();
-        const magicSquare = [2, 7, 6, 9, 5, 1, 4, 3, 8];
-
-        //comparing all combos of 3 cells, see if their sum in the magic square equals 15
-        //idea from https://fowlie.github.io/2018/08/24/winning-algorithm-for-tic-tac-toe-using-a-3x3-magic-square/
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                for (let k = 0; k < 9; k++) {
-                    if (i != j && i != k && j != k) {//don't compare cell with itself
-                        if (values[i] === playerToken && 
-                            values[j] === playerToken && 
-                            values[k] === playerToken){
-                            if ((magicSquare[i] + magicSquare[j] + magicSquare[k]) == 15){
-                                return true;
-                            }
-                            return false;
-                        }}}}} 
     }
-
     const extractValues = () => {
         const values = [];
         board.getBoard().map (
@@ -170,6 +161,12 @@ function GameController(
                 (cell) => values.push(cell.getValue())));
         return values;
     } 
+    const setNames = ( 
+        p1Name = "Player One",
+        p2Name = "Player Two")  => {
+            players[0].name = p1Name;
+            players[1].name = p2Name;
+        }
 
     const restartGame = () => {
         activePlayer = players[0];
@@ -179,7 +176,9 @@ function GameController(
     }
 
 
-
+    const printNewRound = () => {
+        console.log(`${getActivePlayer().name}'s turn:`);
+    }
     //for first round
     printNewRound();
 
@@ -189,7 +188,7 @@ function GameController(
         getMatchResult,
         getBoard: board.getBoard,
         restartGame,
-        
+        setNames,
     }
 }
 
@@ -198,6 +197,8 @@ function ScreenController() {
     const boardDiv = document.querySelector('.board');
     const turnDiv = document.querySelector('.turn');
     const restartButton = document.querySelector('.restart');
+    const startButton = document.querySelector('.start');
+   
 
     const updateScreen = () => {
         //erase old content
@@ -249,9 +250,20 @@ function ScreenController() {
         updateScreen();
     }
 
-    updateScreen();
+    function clickHandlerStart() {
+        game.setNames(...getNames());
+        updateScreen();
+        
+    }
+    const getNames = () => [
+            document.querySelector('.p1Name').value,
+            document.querySelector('.p2Name').value
+        ]
+
     boardDiv.addEventListener('click', clickHandlerBoard);
     restartButton.addEventListener('click', clickHandlerRestart);
+    startButton.addEventListener('click', clickHandlerStart);
+  
 
 }
 
