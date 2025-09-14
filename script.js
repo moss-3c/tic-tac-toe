@@ -227,6 +227,7 @@ function ScreenController() {
                 cellButton.classList.add("cell");
                 cellButton.dataset.column = colIndex;
                 cellButton.dataset.row = board.indexOf(rowArray);
+                cellButton.dataset.value = cell.getValue();
                 cellButton.textContent = cell.getValue();
                 boardDiv.appendChild(cellButton);
             })

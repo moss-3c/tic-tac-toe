@@ -2,7 +2,7 @@
 
 body, input, button{
     font-family: 'Lexend', sans serif;
-    font-weight: 300;
+    font-weight: 400;
     text-align: center;
 }
 body{
@@ -11,12 +11,25 @@ body{
     justify-content: center;
     height: 100vh;
 }
+input{
+    border:none;
+    padding: 0.3rem;
+    border-radius: 5px;
+    background-color: rgba(128, 128, 128, 0.151);
+}
+input:focus{
+    outline: none;
+   
+    font-weight: 700;
 
+}
 .board {
     display: grid;
     grid-template: repeat(3, 5rem) / repeat(3, 5rem);
     gap: 0.5rem;
-      font-family: 'Lexend', sans serif;
+    font-family: 'Lexend', sans serif;
+    width: 1vw;
+    justify-content: center;
 }
 
 .board, .turn, .restart {
@@ -25,10 +38,31 @@ body{
 div {
     margin: 0.3rem auto;
 }
-.board {
-    width: 1vw;
-    justify-content: center;
-}
+
 .start {
     margin: 1rem auto;
+}
+
+.board button {
+    font-size: 2rem;
+    font-family: 'Lexend', sans serif;
+    font-weight: 900;
+    border: none;
+    border-radius: 10px;
+}
+button{
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+}
+button:hover, input:hover {
+    background-color: rgba(128, 128, 128, 0.274);
+}
+
+
+[data-value="X"], .p1Name {
+    color: rgba(0, 0, 255, 0.623);
+}
+[data-value="O"], .p2Name {
+    color: rgba(255, 0, 0, 0.589);
 }
