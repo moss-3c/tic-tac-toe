@@ -116,13 +116,17 @@ function GameController() {
     }
     //returns winner if there is one, returns tie if tie, else returns null
     const updateResult = () => {
-        if (hasWon(players[0].token)) {
-            matchResult = players[0];
+        const winner = checkWinner();
+        if (winner) {  //winner is false if no winner, winner is an object with 2 keys if there is a winner
+            if (winner.patternToken === "X") {
+                matchResult = players[0];
+            }
+            else {
+                matchResult = players[1];
+            }
+            
         }
-        else if (hasWon(players[1].token)) {
-            matchResult = players[1];
-        }
-        else if (checkTie()){
+        else if (isTie()){
             matchResult = 'tie';
         }
         else {
@@ -131,36 +135,96 @@ function GameController() {
 
 
     }
-    const checkTie = () => {
-        const values = extractValues();
-        return !values.includes('');
-    }
-    const hasWon = (playerToken) => {
-        const values = extractValues();
-        const magicSquare = [2, 7, 6, 9, 5, 1, 4, 3, 8];
-
-        //comparing all combos of 3 cells, see if their sum in the magic square equals 15
-        //idea from https://fowlie.github.io/2018/08/24/winning-algorithm-for-tic-tac-toe-using-a-3x3-magic-square/
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                for (let k = 0; k < 9; k++) {
-                    if (i != j && i != k && j != k) {//don't compare cell with itself
-                        if (values[i] === playerToken && 
-                            values[j] === playerToken && 
-                            values[k] === playerToken){
-                            if ((magicSquare[i] + magicSquare[j] + magicSquare[k]) == 15){
-                                return true;
-                            }
-                            return false;
-                        }}}}} 
-    }
-    const extractValues = () => {
+    const isTie = () => {
         const values = [];
         board.getBoard().map (
             (row) => row.map(
                 (cell) => values.push(cell.getValue())));
-        return values;
-    } 
+        return !values.includes('');
+    }
+    const checkWinner = () => {
+        const rows = getHorizontals();
+
+        let winnerObj = hasWinningPattern(rows);
+        if(winnerObj != false) {
+            return winnerObj;
+        }
+        const columns = getVerticals();
+        winnerObj = hasWinningPattern(columns);
+        if(winnerObj != false) {
+            return winnerObj;
+        }
+        const diagonals = getDiagonals();
+        winnerObj = hasWinningPattern(diagonals);
+        if(winnerObj != false) {
+            return winnerObj;
+        }
+        return false;
+
+    }
+    const hasWinningPattern = (array) => {
+        for (let i = 0; i < array.length; i++) {
+            if(winnerObj = isWinningPattern(array[i])) {
+                //if true ie returned obj
+                return winnerObj;
+            }
+        }
+        return false;
+        
+    }
+    const isWinningPattern = (tokenArray) => {
+        if(tokenArray[0] != '' && 
+            tokenArray.every(token => token === tokenArray[0]))
+                return {
+                    hasPattern: true,
+                    patternToken: tokenArray[0],
+                }
+        else {
+            return false;
+        }
+    }
+    const getHorizontals = () => {
+        const boardCells = board.getBoard();
+        let horizontals = [];
+        for (let i = 0; i < boardCells.length; i++) {
+            horizontals.push([]);
+        }
+        for (let i = 0; i < boardCells.length; i++) {
+            for (let j = 0; j < boardCells.length; j++) {
+                horizontals[i][j] = boardCells[i][j].getValue();
+            }
+        }
+        
+        return horizontals;
+    }
+    const getVerticals = () => {
+        const boardCells = board.getBoard();
+        let verticals = []
+        for (let i = 0; i < boardCells.length; i++) {
+            verticals.push([]);
+        }
+        for (let i = 0; i < boardCells.length; i++) {
+            for (let j = 0; j < boardCells.length; j++) {
+                verticals[j].push(boardCells[i][j].getValue());
+            }
+        }
+        return verticals;
+    }
+        
+    
+    const getDiagonals = () => {
+        const boardCells = board.getBoard();
+        let diag1 = [];
+        let diag2 = [];
+        for (let i = 0; i < boardCells.length; i++) {
+            diag1.push(boardCells[i][i].getValue());
+        }
+        for (let i = 0; i < boardCells.length; i++) {
+            diag2.push(boardCells[i][boardCells.length - 1 - i].getValue());
+        }
+        return [diag1, diag2];
+    }
+
 
     const setNames = ( 
         p1Name = "Player One",
