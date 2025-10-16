@@ -4,6 +4,7 @@ A tic tac toe game. Play it in the browser.
 
 ### Features
 - Supports changing player name
+- Mobile-friendly
 
 ### Credits
 - Font is called Lexend.
