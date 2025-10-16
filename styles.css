@@ -32,15 +32,11 @@ input:focus{
     justify-content: center;
 }
 
-.board, .turn, .restart {
-    margin: 1rem auto;
+.board, .turn, .restart, .start, .update-names {
+    margin: 0.5rem auto;
 }
 div {
     margin: 0.3rem auto;
-}
-
-.start {
-    margin: 1rem auto;
 }
 
 .board button {

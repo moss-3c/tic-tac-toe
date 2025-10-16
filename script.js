@@ -262,7 +262,7 @@ function ScreenController() {
     const boardDiv = document.querySelector('.board');
     const turnDiv = document.querySelector('.turn');
     const restartButton = document.querySelector('.restart');
-    const startButton = document.querySelector('.start');
+    const updateNamesButton = document.querySelector('.update-names');
    
 
     const updateScreen = () => {
@@ -317,7 +317,7 @@ function ScreenController() {
         updateScreen();
     }
 
-    function clickHandlerStart() {
+    function clickHandlerUpdateNames() {
         game.setNames(...getNames());
         updateScreen();
     }
@@ -325,11 +325,14 @@ function ScreenController() {
             document.querySelector('.p1Name').value,
             document.querySelector('.p2Name').value
         ]
+    //generate board first time
+    game.setNames(...getNames());
+    updateScreen();
 
     boardDiv.addEventListener('click', clickHandlerBoard);
     restartButton.addEventListener('click', clickHandlerRestart);
-    startButton.addEventListener('click', clickHandlerStart);
-  
+    updateNamesButton.addEventListener('click', clickHandlerUpdateNames);
+    
 
 }
 
